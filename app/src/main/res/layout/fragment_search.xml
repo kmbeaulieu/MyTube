@@ -5,9 +5,14 @@
     android:background="#FFCC00"
     tools:context="sjsu.se137.group3.mytube.SearchFragment">
 
-    <TextView
+    <EditText
+        android:id="@+id/edit_text_search"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/search_me" />
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

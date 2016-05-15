@@ -5,9 +5,9 @@
     android:background="#FFCCFF"
     tools:context="sjsu.se137.group3.mytube.FavoritesFragment">
 
-    <TextView
-        android:layout_width="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_favorites"
         android:layout_height="match_parent"
-        android:text="@string/favorites" />
+        android:layout_width="match_parent"/>
 
 </FrameLayout>

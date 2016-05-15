@@ -1,29 +1,148 @@
 package sjsu.se137.group3.mytube;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
+ * @author Sheethal Mathew
+ * 5/15/16
+ *
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * adapted from poojaTakawale gihub myyoutube repository
  */
+/*
 public class SearchFragment extends Fragment {
+    private EditText searchInput;
+    private List<VideoInformationMode> searchResults;
+    private Handler handler;
+    private RecyclerView recyclerView;
+
+    public static SearchFragment getInstance(int position) {
+        SearchFragment searchFragment = new SearchFragment();
+        Bundle args = new bundle();
+        args.putInt("position", position);
+        return searchFragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View layout = inflater.inflate(R.layout.fragment_search, container, false);
+        searchInput = (EditText) layout.findViewById(R.id.search_input);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.search_list);
+        recyclerView.addItemDecoration(LinearLayoutCompat.DividerMode(getActivity(), LinearLayoutCompat.DividerMode(Canvas.VertexMode));
+        recyclerView.setHasFixedSize(true);
+        handler = new Handler();
+
+        searchInput.setOnEditorActionListener((v,actionId,event) -> {
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
+                searchOnYoutube(v,getText().toString());
+                return false;
+            }
+            return true;
+        });
+        informationAdapter = new InformationAdapter(getActivity(),searchResults);
+        recyclerView.setAdapter(informationAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return layout;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    public void searchOnYoutube(final String keywords) {
+        (Thread) run()-> {
+            YoutubeConnect yc = new YoutubeConnect();
+            searchResults = yc.search(keywords);
+            handler.post(()-> {
+                updateSearchResults();
+            });
+        }
+        onStart();//I AMMM NOTSURE
+    }
+
+    private void updateSearchResults() {
+        informationAdapter = new InformationAdapter(getActivity(),searchResults);
+        recyclerView.setAdapter(informationAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -104,4 +223,4 @@ public class SearchFragment extends Fragment {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }}
-}
+//}

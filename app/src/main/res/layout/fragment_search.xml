@@ -2,12 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFCC00"
-    tools:context="sjsu.se137.group3.mytube.SearchFragment">
 
+    tools:context="sjsu.se137.group3.mytube.SearchFragment">
+    <!--  android:background="#C49"-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/search_me" />
+    <EditText
+        android:id="@+id/search_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/searchicon"/>
 
 </FrameLayout>

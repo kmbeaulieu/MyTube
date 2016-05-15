@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1001331086534",
+    "project_id": "mytube-7362e"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001331086534:android:0155bbd3b2ba65d7",
+        "android_client_info": {
+          "package_name": "sjsu.se137.group3.mytube"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001331086534-8h81h7gr0gg7dpclpt228kv88e97n33j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sjsu.se137.group3.mytube",
+            "certificate_hash": "F2FEF5E5258A0C3B26A98EB8B42BD80D4D71AB1D"
+          }
+        },
+        {
+          "client_id": "1001331086534-7ghc68r0hpb9jpib3q8s3asilsbfgpj1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOdD5hrDl0dRO2wuLSm2sTgZi4HrV56Sg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,5 +28,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.android.support:design:23.3.0'
+    compile 'com.google.apis:google-api-services-youtube:v3-rev155-1.21.0'
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 }

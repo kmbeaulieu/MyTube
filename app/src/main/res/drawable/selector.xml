@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--followed an answer on http://stackoverflow.com/questions/4125774/make-an-android-button-change-background-on-click-through-xml-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:drawable="@android:drawable/btn_star_big_on" /> <!-- pressed -->
+    <item android:state_focused="true"
+        android:drawable="@android:drawable/btn_star_big_on" /> <!-- focused -->
+    <item android:drawable="@android:drawable/btn_star_big_off" /> <!-- default -->
+</selector>

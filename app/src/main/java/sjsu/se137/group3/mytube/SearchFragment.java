@@ -128,6 +128,7 @@ public class SearchFragment extends Fragment {
             textViewPublishDate = (TextView) itemView.findViewById(R.id.text_view_publish_date);
             youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.thumbnail);
             buttonAddToFavorites = (ImageButton) itemView.findViewById(R.id.button_add_to_favorites);
+            buttonAddToFavorites.setBackgroundResource(R.drawable.selector);
         }
 
         private void bindResult(SearchResult searchResult) {
@@ -183,7 +184,7 @@ public class SearchFragment extends Fragment {
             buttonAddToFavorites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // need to figure out how to set highlighted color for button still. 
+                    // need to figure out how to set highlighted color for button still. selector.xml!
                     // This crashes it FavoritesFragment.favoritesList.add(_searchResult);
                 }
             });

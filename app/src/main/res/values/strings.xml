@@ -17,6 +17,7 @@
         completions."
     </string>
 
+    <string name="server_client_id">1001331086534-d21hdala3a7tpt01lepo8s5jq95oilc4.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_me">Search me!</string>

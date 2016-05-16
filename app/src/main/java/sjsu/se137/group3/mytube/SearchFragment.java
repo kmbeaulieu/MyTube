@@ -1,110 +1,194 @@
 package sjsu.se137.group3.mytube;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.SearchResultSnippet;
+import com.google.api.services.youtube.model.Video;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
+ *
  */
 public class SearchFragment extends Fragment {
+    private final static String YOUTUBE_KEY = Settings.getKey();
+    private final static long MAX_RESULTS = 24;
+    private static YouTube youTube;
+    private List<SearchResult> mSearchResults;
+    private EditText searchEditText;
+    private RecyclerView mSearchResultsRecyclerView;
+    private SearchResultsAdapter _searchResultsAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        View vFragmentSearch = inflater.inflate(R.layout.fragment_search, container, false);
+        searchEditText = (EditText) vFragmentSearch.findViewById(R.id.edit_text_search);
+        mSearchResults = new ArrayList<>();
+
+        youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
+            @Override
+            public void initialize(HttpRequest request) throws IOException {
+
+            }
+        }).setApplicationName("MyTube").build();
+
+        searchEditText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new Search().run();
+            }
+        });
+
+        mSearchResultsRecyclerView = (RecyclerView) vFragmentSearch.findViewById(R.id.recycler_view_search);
+        mSearchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateRecyclerView();
+
+        return vFragmentSearch;
     }
 
+    private class Search implements Runnable {
 
+        @Override
+        public void run() {
+            try {
+                YouTube.Search.List search = youTube.search().list("id,snippet");
+                search.setQ(searchEditText.getText().toString());
+                search.setType("video");
+                search.setMaxResults(MAX_RESULTS);
+                search.setKey(YOUTUBE_KEY);
+                SearchListResponse searchListResponse = search.execute();
+                mSearchResults = searchListResponse.getItems();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class SearchResultsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private String selectedID;
+        private YouTubeThumbnailView youTubeThumbnailView;
+        private TextView textViewTitle;
+        private TextView textViewCount;
+        private TextView textViewPublishDate;
+        private Button buttonAddToFavorites;
+        private Video video;
+
+        public SearchResultsHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+
+            textViewTitle = (TextView) itemView.findViewById(R.id.text_view_title);
+            textViewCount = (TextView) itemView.findViewById(R.id.text_view_count);
+            textViewPublishDate = (TextView) itemView.findViewById(R.id.text_view_publish_date);
+            youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.thumbnail);
+            buttonAddToFavorites = (Button) itemView.findViewById(R.id.button_add_to_favorites);
+        }
+
+        private void bindResult(SearchResult searchResult) {
+            selectedID = searchResult.getId().getVideoId();
+            SearchResultSnippet searchResultSnippet = searchResult.getSnippet();
+            String title = searchResultSnippet.getTitle();
+            String publishedDate = "Published: " + searchResultSnippet.getPublishedAt().toString();
+            String viewCount = "View count: ";
+            final String videoID = searchResult.getId().getVideoId();
+            final SearchResult _searchResult = searchResult;
+
+            try {
+                YouTube.Videos.List youtubeVideoList = youTube.videos().list("statistics");
+                youtubeVideoList.setId(searchResult.getId().getVideoId());
+                youtubeVideoList.setKey(YOUTUBE_KEY);
+                video = youtubeVideoList.execute().getItems().get(0);
+                viewCount += video.getStatistics().getViewCount();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            youTubeThumbnailView.initialize(YOUTUBE_KEY, new YouTubeThumbnailView.OnInitializedListener() {
+                @Override
+                public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+                    youTubeThumbnailLoader.setVideo(videoID);
+                }
+
+                @Override
+                public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+
+                }
+            });
+
+            textViewTitle.setText(title);
+            textViewCount.setText(viewCount);
+            textViewPublishDate.setText(publishedDate);
+
+//            buttonAddToFavorites.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+                    //TODO: add _searchResult to favorites list
+//                    FavoritesFragment.
+//                }
+//            });
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getActivity(), YouTubeActivity.class);
+            intent.putExtra(YouTubeActivity.VIDEO_ID_KEY, selectedID);
+            startActivity(intent);
+        }
+    }
+
+    private void updateRecyclerView(){
+        _searchResultsAdapter = new SearchResultsAdapter(mSearchResults);
+        mSearchResultsRecyclerView.setAdapter(_searchResultsAdapter);
+    }
+
+    private class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsHolder> {
+        List<SearchResult> searchResults;
+
+        public SearchResultsAdapter(List<SearchResult> searchResults) {
+            this.searchResults = searchResults;
+        }
+
+        @Override
+        public SearchResultsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater.inflate(R.layout.fragment_search_item, parent, false);
+            return new SearchResultsHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(SearchResultsHolder holder, int position) {
+            holder.bindResult(mSearchResults.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return searchResults.size();
+        }
+    }
 }
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//
-//    private OnFragmentInteractionListener mListener;
-//
-//    public SearchFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @return A new instance of fragment SearchFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static SearchFragment newInstance(){//String param1, String param2) {
-//        SearchFragment fragment = new SearchFragment();
-//        Bundle args = new Bundle();
-////        args.putString(ARG_PARAM1, param1);
-////        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
-
-
-//
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p/>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }}
-

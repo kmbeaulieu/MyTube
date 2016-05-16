@@ -24,10 +24,13 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:support-v4:23.3.0'
     compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.android.support:design:23.3.0'
-    compile 'com.google.apis:google-api-services-youtube:v3-rev155-1.21.0'
+    compile ('com.google.apis:google-api-services-youtube:v3-rev155-1.21.0'){
+        exclude module: 'httpclient' //by artifact name
+        exclude group: 'org.apache.httpcomponents' //by group
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient' //by both name and group
+    }
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 }

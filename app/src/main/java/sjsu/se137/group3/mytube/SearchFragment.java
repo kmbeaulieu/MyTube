@@ -183,8 +183,8 @@ public class SearchFragment extends Fragment {
             buttonAddToFavorites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // need to figure out how to set highlighted color for button still. 
-                    // This crashes it FavoritesFragment.favoritesList.add(_searchResult);
+                    // need to figure out how to set highlighted color for button still.
+                    FavoritesFragment.favoritesList.add(_searchResult);
                 }
             });
         }

@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment {
     private final static String YOUTUBE_KEY = Settings.getKey();
-    private final static long MAX_RESULTS = 1;
+    private final static long MAX_RESULTS = 10;
     private static YouTube youTube;
     private List<SearchResult> mSearchResults;
     private EditText searchEditText;

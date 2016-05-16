@@ -62,6 +62,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new Search().doInBackground(null);
+                updateRecyclerView();
             }
         });
 
@@ -133,10 +134,25 @@ public class SearchFragment extends Fragment {
             final SearchResult _searchResult = searchResult;
 
             try {
-                YouTube.Videos.List youtubeVideoList = youTube.videos().list("statistics");
+                final YouTube.Videos.List youtubeVideoList = youTube.videos().list("statistics");
                 youtubeVideoList.setId(searchResult.getId().getVideoId());
                 youtubeVideoList.setKey(YOUTUBE_KEY);
-                video = youtubeVideoList.execute().getItems().get(0);
+                Thread k = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            video = youtubeVideoList.execute().getItems().get(0);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                k.start();
+                try {
+                    k.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 viewCount += video.getStatistics().getViewCount();
             } catch (IOException e) {
                 e.printStackTrace();

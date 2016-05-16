@@ -68,6 +68,7 @@ public class SearchFragment extends Fragment {
         mSearchResultsRecyclerView = (RecyclerView) vFragmentSearch.findViewById(R.id.recycler_view_search);
         mSearchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateRecyclerView();
+        _searchResultsAdapter = new SearchResultsAdapter(mSearchResults);
 
         return vFragmentSearch;
     }

@@ -1,6 +1,7 @@
 package sjsu.se137.group3.mytube;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -42,6 +44,7 @@ public class SearchFragment extends Fragment {
     private EditText searchEditText;
     private RecyclerView mSearchResultsRecyclerView;
     private SearchResultsAdapter _searchResultsAdapter;
+    private ImageButton imageButtonSearch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +53,7 @@ public class SearchFragment extends Fragment {
         View vFragmentSearch = inflater.inflate(R.layout.fragment_search, container, false);
         searchEditText = (EditText) vFragmentSearch.findViewById(R.id.edit_text_search);
         mSearchResults = new ArrayList<>();
+        imageButtonSearch = (ImageButton) vFragmentSearch.findViewById(R.id.imageButtonSearch);
 
         youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
             @Override
@@ -57,7 +61,8 @@ public class SearchFragment extends Fragment {
 
             }
         }).setApplicationName("MyTube").build();
-        searchEditText.setOnClickListener(new View.OnClickListener() {
+
+        imageButtonSearch.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -69,6 +74,7 @@ public class SearchFragment extends Fragment {
         mSearchResultsRecyclerView = (RecyclerView) vFragmentSearch.findViewById(R.id.recycler_view_search);
         mSearchResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateRecyclerView();
+        _searchResultsAdapter = new SearchResultsAdapter(mSearchResults);
 
         return vFragmentSearch;
     }
@@ -110,7 +116,7 @@ public class SearchFragment extends Fragment {
         private TextView textViewTitle;
         private TextView textViewCount;
         private TextView textViewPublishDate;
-        private Button buttonAddToFavorites;
+        private ImageButton buttonAddToFavorites;
         private Video video;
 
         public SearchResultsHolder(View itemView) {
@@ -121,7 +127,7 @@ public class SearchFragment extends Fragment {
             textViewCount = (TextView) itemView.findViewById(R.id.text_view_count);
             textViewPublishDate = (TextView) itemView.findViewById(R.id.text_view_publish_date);
             youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.thumbnail);
-            buttonAddToFavorites = (Button) itemView.findViewById(R.id.button_add_to_favorites);
+            buttonAddToFavorites = (ImageButton) itemView.findViewById(R.id.button_add_to_favorites);
         }
 
         private void bindResult(SearchResult searchResult) {
@@ -177,7 +183,8 @@ public class SearchFragment extends Fragment {
             buttonAddToFavorites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FavoritesFragment.favoritesList.add(_searchResult);
+                    // need to figure out how to set highlighted color for button still. 
+                    // This crashes it FavoritesFragment.favoritesList.add(_searchResult);
                 }
             });
         }

@@ -1,6 +1,7 @@
 package sjsu.se137.group3.mytube;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment {
     private final static String YOUTUBE_KEY = Settings.getKey();
-    private final static long MAX_RESULTS = 24;
+    private final static long MAX_RESULTS = 1;
     private static YouTube youTube;
     private List<SearchResult> mSearchResults;
     private EditText searchEditText;
@@ -56,12 +57,11 @@ public class SearchFragment extends Fragment {
 
             }
         }).setApplicationName("MyTube").build();
-
         searchEditText.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                new Search().run();
+                new Search().doInBackground(null);
             }
         });
 
@@ -72,21 +72,34 @@ public class SearchFragment extends Fragment {
         return vFragmentSearch;
     }
 
-    private class Search implements Runnable {
+    private class Search extends AsyncTask {
 
         @Override
-        public void run() {
+        protected Object doInBackground(Object[] params) {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        YouTube.Search.List search = youTube.search().list("id,snippet");
+                        search.setQ(searchEditText.getText().toString());
+                        search.setType("video");
+                        search.setMaxResults(MAX_RESULTS);
+                        search.setKey(YOUTUBE_KEY);
+                        SearchListResponse searchListResponse = search.execute();
+                        mSearchResults = searchListResponse.getItems();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            t.start();
             try {
-                YouTube.Search.List search = youTube.search().list("id,snippet");
-                search.setQ(searchEditText.getText().toString());
-                search.setType("video");
-                search.setMaxResults(MAX_RESULTS);
-                search.setKey(YOUTUBE_KEY);
-                SearchListResponse searchListResponse = search.execute();
-                mSearchResults = searchListResponse.getItems();
-            } catch (IOException e) {
+                t.join();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            return null;
         }
     }
 
@@ -145,13 +158,12 @@ public class SearchFragment extends Fragment {
             textViewCount.setText(viewCount);
             textViewPublishDate.setText(publishedDate);
 
-//            buttonAddToFavorites.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-                    //TODO: add _searchResult to favorites list
-//                    FavoritesFragment.
-//                }
-//            });
+            buttonAddToFavorites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FavoritesFragment.favoritesList.add(_searchResult);
+                }
+            });
         }
 
         @Override

@@ -6,11 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.api.services.youtube.model.SearchResult;
+
+import java.util.List;
+
 
 /**
  *
  */
 public class FavoritesFragment extends Fragment {
+    public static List<SearchResult> favoritesList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

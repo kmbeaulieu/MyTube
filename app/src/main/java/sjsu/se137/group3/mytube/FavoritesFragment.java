@@ -92,7 +92,6 @@ public class FavoritesFragment extends Fragment {
             String publishedDate = "Published: " + searchResultSnippet.getPublishedAt().toString();
             String viewCount = "View count: ";
             final String videoID = searchResult.getId().getVideoId();
-            final SearchResult _searchResult = searchResult;
 
             try {
                 final YouTube.Videos.List youtubeVideoList = youTube.videos().list("statistics");

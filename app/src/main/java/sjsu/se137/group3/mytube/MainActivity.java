@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-
+        tab
     }
 
     @Override
@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.

@@ -1,5 +1,6 @@
 package sjsu.se137.group3.mytube;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -66,6 +68,9 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                //this closes the keyboard and checks for null in case onPause or something happened
+                InputMethodManager inputManager = (InputMethodManager) (getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow((null == (getActivity()).getCurrentFocus()) ? null : (getActivity()).getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 new Search().doInBackground(null);
                 updateRecyclerView();
             }
